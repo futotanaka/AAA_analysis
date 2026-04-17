@@ -1,0 +1,119 @@
+[33mcommit 179fd2af30075a80387756f72418918f3ce4a445[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m)[m
+Author: futotanaka(futo, tanaka) <22t0824y@student.gs.chiba-u.jp>
+Date:   Fri Apr 17 10:49:18 2026 +0900
+
+    first commit
+
+ Readme.md                                                                                                                                 |  204 [32m+++++++[m
+ Unet_plus.py                                                                                                                              |  107 [32m++++[m
+ Unet_plus_3ch_in.py                                                                                                                       |   88 [32m+++[m
+ Unet_plus_3d.py                                                                                                                           |  116 [32m++++[m
+ __pycache__/Unet_plus.cpython-310.pyc                                                                                                     |  Bin [31m0[m -> [32m3644[m bytes
+ __pycache__/Unet_plus.cpython-312.pyc                                                                                                     |  Bin [31m0[m -> [32m7719[m bytes
+ __pycache__/Unet_plus_3ch_in.cpython-310.pyc                                                                                              |  Bin [31m0[m -> [32m3057[m bytes
+ __pycache__/Unet_plus_3ch_in.cpython-312.pyc                                                                                              |  Bin [31m0[m -> [32m6539[m bytes
+ __pycache__/arterial_analysis.cpython-310.pyc                                                                                             |  Bin [31m0[m -> [32m6827[m bytes
+ __pycache__/arterial_analysis.cpython-312.pyc                                                                                             |  Bin [31m0[m -> [32m12744[m bytes
+ __pycache__/attUnet.cpython-310.pyc                                                                                                       |  Bin [31m0[m -> [32m4430[m bytes
+ __pycache__/attUnet.cpython-312.pyc                                                                                                       |  Bin [31m0[m -> [32m8549[m bytes
+ __pycache__/branch_segmentation.cpython-310.pyc                                                                                           |  Bin [31m0[m -> [32m7066[m bytes
+ __pycache__/branch_segmentation.cpython-312.pyc                                                                                           |  Bin [31m0[m -> [32m16554[m bytes
+ __pycache__/dataSetCreat.cpython-310.pyc                                                                                                  |  Bin [31m0[m -> [32m4944[m bytes
+ __pycache__/dataSetCreat.cpython-312.pyc                                                                                                  |  Bin [31m0[m -> [32m7729[m bytes
+ __pycache__/dice.cpython-310.pyc                                                                                                          |  Bin [31m0[m -> [32m1139[m bytes
+ __pycache__/dice.cpython-312.pyc                                                                                                          |  Bin [31m0[m -> [32m1709[m bytes
+ __pycache__/diceCE.cpython-310.pyc                                                                                                        |  Bin [31m0[m -> [32m1001[m bytes
+ __pycache__/mhd_io.cpython-310.pyc                                                                                                        |  Bin [31m0[m -> [32m1892[m bytes
+ __pycache__/mhd_io.cpython-312.pyc                                                                                                        |  Bin [31m0[m -> [32m3409[m bytes
+ __pycache__/overlay.cpython-310.pyc                                                                                                       |  Bin [31m0[m -> [32m793[m bytes
+ __pycache__/overlay.cpython-312.pyc                                                                                                       |  Bin [31m0[m -> [32m1222[m bytes
+ __pycache__/predDataSetCreat.cpython-310.pyc                                                                                              |  Bin [31m0[m -> [32m2851[m bytes
+ __pycache__/predDataSetCreat.cpython-312.pyc                                                                                              |  Bin [31m0[m -> [32m3845[m bytes
+ __pycache__/preprocessing.cpython-310.pyc                                                                                                 |  Bin [31m0[m -> [32m6826[m bytes
+ __pycache__/preprocessing.cpython-312.pyc                                                                                                 |  Bin [31m0[m -> [32m15671[m bytes
+ __pycache__/stent_analysis.cpython-310.pyc                                                                                                |  Bin [31m0[m -> [32m11296[m bytes
+ __pycache__/stent_analysis.cpython-312.pyc                                                                                                |  Bin [31m0[m -> [32m20189[m bytes
+ __pycache__/test.cpython-310.pyc                                                                                                          |  Bin [31m0[m -> [32m10349[m bytes
+ __pycache__/unet.cpython-310.pyc                                                                                                          |  Bin [31m0[m -> [32m3368[m bytes
+ __pycache__/unet.cpython-312.pyc                                                                                                          |  Bin [31m0[m -> [32m5693[m bytes
+ arterial_analysis.py                                                                                                                      |  290 [32m+++++++++[m
+ attUnet.py                                                                                                                                |  162 [32m+++++[m
+ aug/transformed_sample_0.png                                                                                                              |  Bin [31m0[m -> [32m89857[m bytes
+ aug/transformed_sample_1.png                                                                                                              |  Bin [31m0[m -> [32m91328[m bytes
+ branch_segmentation.py                                                                                                                    |  447 [32m++++++++++++++[m
+ dataExtractor.py                                                                                                                          |  194 [32m++++++[m
+ dataSetCreat.py                                                                                                                           |  123 [32m++++[m
+ dextract.sh                                                                                                                               |   15 [32m+[m
+ dice.py                                                                                                                                   |   34 [32m++[m
+ diceCE.py                                                                                                                                 |   26 [32m+[m
+ graph.png                                                                                                                                 |  Bin [31m0[m -> [32m55706[m bytes
+ mhd_io.py                                                                                                                                 |   72 [32m+++[m
+ output.txt                                                                                                                                |   89 [32m+++[m
+ outputs/models/model_best_20250331152220_UnetPlus.pth                                                                                     |  Bin [31m0[m -> [32m7113682[m bytes
+ outputs/testout/mhd/2012EN17_prediction.mhd                                                                                               |    7 [32m+[m
+ outputs/testout/mhd/2012EN17_prediction.raw                                                                                               |  Bin [31m0[m -> [32m287309824[m bytes
+ outputs/testout/mhd/2012EN23_prediction.mhd                                                                                               |    7 [32m+[m
+ outputs/testout/mhd/2012EN23_prediction.raw                                                                                               |  Bin [31m0[m -> [32m251658240[m bytes
+ outputs/testout/mhd/2012EN27_prediction.mhd                                                                                               |    7 [32m+[m
+ outputs/testout/mhd/2012EN27_prediction.raw                                                                                               |  Bin [31m0[m -> [32m266338304[m bytes
+ outputs/testout/mhd/2012GO19_prediction.mhd                                                                                               |    7 [32m+[m
+ outputs/testout/mhd/2012GO19_prediction.raw                                                                                               |  Bin [31m0[m -> [32m278921216[m bytes
+ outputs/testout/mhd/2012GO20_20120928_prediction.mhd                                                                                      |    7 [32m+[m
+ outputs/testout/mhd/2012GO20_20120928_prediction.raw                                                                                      |  Bin [31m0[m -> [32m33554432[m bytes
+ outputs/testout/mhd/2012GO20_20130208_prediction.mhd                                                                                      |    7 [32m+[m
+ outputs/testout/mhd/2012GO20_20130208_prediction.raw                                                                                      |  Bin [31m0[m -> [32m33292288[m bytes
+ outputs/testout/mhd/2012GO20_prediction.mhd                                                                                               |    7 [32m+[m
+ outputs/testout/mhd/2012GO20_prediction.raw                                                                                               |  Bin [31m0[m -> [32m268435456[m bytes
+ outputs/testout/mhd/2012PO12_prediction.mhd                                                                                               |    7 [32m+[m
+ outputs/testout/mhd/2012PO12_prediction.raw                                                                                               |  Bin [31m0[m -> [32m297795584[m bytes
+ outputs/testout/test_result_th0.100_20260409135859_UnetPlus.csv                                                                           |   62 [32m++[m
+ outputs/testout/test_result_th0.500_20260324165300_UnetPlus.csv                                                                           |   22 [32m+[m
+ outputs/testout/test_result_th0.500_20260324165443_UnetPlus.csv                                                                           |   42 [32m++[m
+ outputs/testout/test_result_th0.500_20260324165827_UnetPlus.csv                                                                           |   42 [32m++[m
+ outputs/testout/test_result_th0.500_20260324170720_UnetPlus.csv                                                                           |   12 [32m+[m
+ outputs/testout/test_result_th0.500_20260324171011_UnetPlus.csv                                                                           |   22 [32m+[m
+ outputs/testout/test_result_th0.500_20260409134708_UnetPlus.csv                                                                           |   22 [32m+[m
+ outputs/testout/test_result_th0.500_20260409135419_UnetPlus.csv                                                                           |   12 [32m+[m
+ outputs/testout/test_result_th0.500_20260409135607_UnetPlus.csv                                                                           |   62 [32m++[m
+ outputs/testout/test_result_th0.510_20260409140004_UnetPlus.csv                                                                           |   62 [32m++[m
+ outputs/testout2/mhd/2018EAF11_20180903_prediction.mhd                                                                                    |    7 [32m+[m
+ outputs/testout2/mhd/2018EAF11_20180903_prediction.raw                                                                                    |  Bin [31m0[m -> [32m48234496[m bytes
+ outputs/testout2/mhd/2018EAF9_20180911_prediction.mhd                                                                                     |    7 [32m+[m
+ outputs/testout2/mhd/2018EAF9_20180911_prediction.raw                                                                                     |  Bin [31m0[m -> [32m35127296[m bytes
+ outputs2/csvFiles/loss_log_20260408132353_UnetPlus_DSV.csv                                                                                |    1 [32m+[m
+ outputs2/csvFiles/loss_log_20260408132723_UnetPlus_DSV.csv                                                                                |    1 [32m+[m
+ outputs2/csvFiles/loss_log_20260408132853_UnetPlus_DSV.csv                                                                                |    4 [32m+[m
+ outputs2/models/model_best_20260408132853_UnetPlus_DSV.pth                                                                                |  Bin [31m0[m -> [32m9267051[m bytes
+ overlay.py                                                                                                                                |   36 [32m++[m
+ predDataExtractor.py                                                                                                                      |  163 [32m+++++[m
+ predDataSetCreat.py                                                                                                                       |   63 [32m++[m
+ prediction.py                                                                                                                             |  349 [32m+++++++++++[m
+ prediction.sh                                                                                                                             |    8 [32m+[m
+ preprocessing.py                                                                                                                          |  340 [32m+++++++++++[m
+ skeleton_test.py                                                                                                                          |  482 [32m+++++++++++++++[m
+ stent_analysis.py                                                                                                                         |  541 [32m++++++++++++++++[m
+ test.py                                                                                                                                   |  383 [32m++++++++++++[m
+ test.sh                                                                                                                                   |   12 [32m+[m
+ train.sh                                                                                                                                  |    7 [32m+[m
+ training.py                                                                                                                               |  301 [32m+++++++++[m
+ training_3d.py                                                                                                                            |  285 [32m+++++++++[m
+ unet.py                                                                                                                                   |  113 [32m++++[m
+ "\345\233\263\344\275\234\343\202\212/AAAarea_graph.py"                                                                                   |  228 [32m+++++++[m
+ "\345\233\263\344\275\234\343\202\212/bodymask.py"                                                                                        |  146 [32m+++++[m
+ "\345\233\263\344\275\234\343\202\212/ct_para_output.py"                                                                                  |   65 [32m++[m
+ "\345\233\263\344\275\234\343\202\212/deformation_test.py"                                                                                |  173 [32m++++++[m
+ "\345\233\263\344\275\234\343\202\212/spacing_editor.py"                                                                                  |  143 [32m+++++[m
+ "\345\233\263\344\275\234\343\202\212/time_series_figure_add_stent.py"                                                                    |  178 [32m++++++[m
+ "\347\265\220\346\236\234/segmentation.txt"                                                                                               |  138 [32m+++++[m
+ "\347\265\220\346\236\234/\343\203\242\343\203\207\343\203\253\343\201\250\343\203\255\343\202\260/general_log.csv"                       |  167 [32m+++++[m
+ .../\343\203\242\343\203\207\343\203\253\343\201\250\343\203\255\343\202\260/\343\203\242\343\203\207\343\203\253/hyperparameters.txt"    |    7 [32m+[m
+ .../\343\203\242\343\203\207\343\203\253/model_best_20240430143730_AttUnet.pth"                                                           |  Bin [31m0[m -> [32m8840666[m bytes
+ .../\343\203\242\343\203\207\343\203\253/model_best_20240712033937_UnetPlus.pth"                                                          |  Bin [31m0[m -> [32m9263250[m bytes
+ .../\343\203\242\343\203\207\343\203\253/model_best_20241128145932_UnetPlus_3ch.pth"                                                      |  Bin [31m0[m -> [32m5252978[m bytes
+ .../\343\203\242\343\203\207\343\203\253/model_best_20250331152220_UnetPlus.pth"                                                          |  Bin [31m0[m -> [32m7113682[m bytes
+ .../\343\203\242\343\203\207\343\203\253/model_best_20250412022953_UnetPlus_DSV.pth"                                                      |  Bin [31m0[m -> [32m3676448[m bytes
+ "\347\265\220\346\236\234/\350\250\210\346\270\254\347\265\220\346\236\234/8_cases_isotropic.txt"                                         | 2414 [32m++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++[m
+ "\347\265\220\346\236\234/\350\250\210\346\270\254\347\265\220\346\236\234/8_cases_no_isotropic.txt"                                      | 1340 [32m++++++++++++++++++++++++++++++++++++++++[m
+ "\347\265\220\346\236\234/\350\250\210\346\270\254\347\265\220\346\236\234/8_cases_results.csv"                                           |   57 [32m++[m
+ "\347\265\220\346\236\234/\350\250\210\346\270\254\347\265\220\346\236\234/8_cases_results_no_isotropic.csv"                              |   57 [32m++[m
+ 112 files changed, 10599 insertions(+)
