@@ -15,6 +15,7 @@ import arterial_analysis
 import stent_analysis
 import branch_segmentation
 import sys
+import pandas as pd
 
 class Tee:
     def __init__(self, *streams):
@@ -365,17 +366,49 @@ def skeleton_analysis(array_aorta, array_stent, spacing, dimension, output_base_
     stent_analysis.postProcessingForStent(post_skeleton_stent, array_stent, spacing, branch_point)
     # Arterial analysis
     aaa_range = arterial_analysis.post_processing_for_arterial(array_aorta,spacing,branch_point,array_stent,zoom_factor)
+
+    # --- Bounding Box 計算 ---
+    def get_bbox_metrics(array, spc, z_limits=None):
+        target = array
+        if z_limits is not None:
+            temp = np.zeros_like(array)
+            temp[int(z_limits[0]):int(z_limits[1])+1, :, :] = array[int(z_limits[0]):int(z_limits[1])+1, :, :]
+            target = temp
+        
+        coords = np.argwhere(target > 0)
+        if coords.size == 0: return 0, 0, 0
+        dz = (coords[:, 0].max() - coords[:, 0].min() + 1) * spc[2]
+        dy = (coords[:, 1].max() - coords[:, 1].min() + 1) * spc[1]
+        dx = (coords[:, 2].max() - coords[:, 2].min() + 1) * spc[0]
+        #print(coords[:, 2].min(), coords[:, 2].max(),:: coords[:, 1].min(), coords[:, 1].max(),:: coords[:, 0].min(), coords[:, 0].max())
+        return round(dx, 2), round(dy, 2), round(dz, 2)
+
+    a_x, a_y, a_z = get_bbox_metrics(array_aorta, spacing)
+    s_x, s_y, s_z = get_bbox_metrics(array_stent, spacing)
+    aaa_x, aaa_y, aaa_z = get_bbox_metrics(array_aorta, spacing, z_limits=aaa_range)
     
     total_len, mask = stent_analysis.AAA_part_stent_analysis(array_stent, post_skeleton_stent, aaa_range, spacing, array_stent_ori, spacing_ori, zoom_factor)
     # print(array_aorta.shape, skeleton.shape)
+
+    # raw+mhdファイルを出力するには以下の3行を有効にする
     mhd_io.export_to_mhd_and_raw(f"{output_base_dir}/{output_name}_skeleton_arterial.mhd", post_skeleton_arterial, spacing, dimension)
     mhd_io.export_to_mhd_and_raw(f"{output_base_dir}/{output_name}_skeleton_stent.mhd", mask, spacing, dimension)
     mhd_io.export_to_mhd_and_raw(f"{output_base_dir}/{output_name}_arterial.mhd", array_aorta, spacing, dimension)
+
+    # 今回の計算結果を辞書で返す
+    return {
+        "Case_ID": output_name,
+        "Aorta_X_mm": a_x, "Aorta_Y_mm": a_y, "Aorta_Z_mm": a_z,
+        "Stent_X_mm": s_x, "Stent_Y_mm": s_y, "Stent_Z_mm": s_z,
+        "AAA_X_mm": aaa_x, "AAA_Y_mm": aaa_y, "AAA_Z_mm": aaa_z
+    }
 
 def process_directory(input_dir, output_base_dir):
     if not os.path.exists(input_dir):
         print("Directory not exists.")
         return  # Exit if the input directory does not exist
+
+    all_results = []
     
     # Traverse directories and process .mhd files
     for subdir, dirs, files in os.walk(input_dir):
@@ -464,11 +497,21 @@ def process_directory(input_dir, output_base_dir):
                         output_name = f"{words[0]}_{words[1]}"
                         print(output_name, spacing, dimension)
                         print("Interpolation...zoom factor: ", zoom_factor)
-                        skeleton_analysis(array_aorta, array_stent, spacing, dimension, output_base_dir, output_name, zoom_factor,
+                        res = skeleton_analysis(array_aorta, array_stent, spacing, dimension, output_base_dir, output_name, zoom_factor,
                                           array_aorta_ori, array_stent_ori, spacing_ori, dim_ori)
+                        all_results.append(res) # リストに追加
+                        print(f"Case {output_name} added to summary.")
 
             except Exception as e:
                 print(f"Processing error: {e}")
+    
+    if all_results:
+        summary_df = pd.DataFrame(all_results)
+        csv_output_path = os.path.join(output_base_dir, "all_cases_bbox_summary.csv")
+        summary_df.to_csv(csv_output_path, index=False, encoding='utf-8-sig')
+        print(f"\n[Success] Final summary saved to: {csv_output_path}")
+    else:
+        print("No results to save.")
                 
 if __name__=="__main__":
     parser = argparse.ArgumentParser(description='AAA data extraction.',
