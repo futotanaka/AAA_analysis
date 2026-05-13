@@ -3,6 +3,7 @@ from scipy.ndimage import label
 from scipy.ndimage import zoom
 import math
 import cv2
+import pandas as pd
 
 # Convert "postProcessingForArterial" to Python
 def post_processing_for_arterial(arterial_mask, spacing, branch_point, stent_mask, zoom_factor):
@@ -50,12 +51,20 @@ def post_processing_for_arterial(arterial_mask, spacing, branch_point, stent_mas
     analyze_axial_areas(arterial_mask, start_slice, end_slice, slice_thickness, spacing)
 
     # Calculate AAA range and volume
-    aaa_start, aaa_end = calculate_aaa_range(area_rates, area_rates_index, arterial_mask, spacing, start_slice, index_max, zoom_factor, branch_point)
+    aaa_start, aaa_end, volume = calculate_aaa_range(area_rates, area_rates_index, arterial_mask, spacing, start_slice, index_max, zoom_factor, branch_point)
 
     # Calculate maximum diameter and short axis
-    calculate_diameters(arterial_mask, spacing, aaa_start, aaa_end)
+    max_diameter, max_short_diameter = calculate_diameters(arterial_mask, spacing, aaa_start, aaa_end)
+
+    # Save part of the data
+    data = [[volume, max_diameter, max_short_diameter]]
+    df = pd.DataFrame(data, columns=['AAA_volume', 'max_diameter', 'max_short_diameter'])
+    save_path = '/home/tanaka/data/analysis_res3/part_of_the_results.csv'
+    df.to_csv(save_path, index=False, encoding='utf-8-sig')
+
+    print("~~~~~~~~~~ Save part of the data ~~~~~~~~~~~~~~~")
     
-    return [aaa_start,aaa_end]
+    return [aaa_start, aaa_end]
 
 # Bounding box calculation
 def bounding_box_cal(mask, spacing, reference_slice):
@@ -136,7 +145,7 @@ def calculate_aaa_range(area_rates, area_rates_index, arterial_mask, spacing, st
     # volume = np.sum([np.count_nonzero(arterial_mask[i]) * spacing[0] * spacing[1] * spacing[2] for i in range(aaa_start, aaa_end + 1)])
     volume = np.count_nonzero(arterial_mask[aaa_start:aaa_end+1]) * spacing[0] * spacing[1] * spacing[2]
     print(f"AAA Volume: {volume}")
-    return aaa_start, aaa_end
+    return aaa_start, aaa_end, volume
 
 # Calculate maximum diameter and short axis
 def calculate_diameters(arterial_mask, spacing, start_slice, end_slice):
@@ -189,6 +198,7 @@ def calculate_diameters(arterial_mask, spacing, start_slice, end_slice):
 
     print(f"Max Diameter: {max_diameter} at slice {max_dindex}")
     print(f"Max Short Diameter: {max_short_diameter} at slice {max_shortidx}")
+    return max_diameter, max_short_diameter
 
 def points_of_ellipse(ellipse):
     (cy, cx), (w, h), angle = ellipse

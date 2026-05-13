@@ -372,7 +372,8 @@ def skeleton_analysis(array_aorta, array_stent, spacing, dimension, output_base_
         target = array
         if z_limits is not None:
             temp = np.zeros_like(array)
-            temp[int(z_limits[0]):int(z_limits[1])+1, :, :] = array[int(z_limits[0]):int(z_limits[1])+1, :, :]
+            z_start, z_end = int(z_limits[0]), int(z_limits[1])
+            temp[z_start:z_end+1, :, :] = array[z_start:z_end+1, :, :]
             target = temp
         
         coords = np.argwhere(target > 0)
@@ -383,8 +384,8 @@ def skeleton_analysis(array_aorta, array_stent, spacing, dimension, output_base_
         #print(coords[:, 2].min(), coords[:, 2].max(),:: coords[:, 1].min(), coords[:, 1].max(),:: coords[:, 0].min(), coords[:, 0].max())
         return round(dx, 2), round(dy, 2), round(dz, 2)
 
-    a_x, a_y, a_z = get_bbox_metrics(array_aorta, spacing)
     s_x, s_y, s_z = get_bbox_metrics(array_stent, spacing)
+    saaa_x, saaa_y, saaa_z = get_bbox_metrics(array_stent, spacing, z_limits=aaa_range)
     aaa_x, aaa_y, aaa_z = get_bbox_metrics(array_aorta, spacing, z_limits=aaa_range)
     
     total_len, mask = stent_analysis.AAA_part_stent_analysis(array_stent, post_skeleton_stent, aaa_range, spacing, array_stent_ori, spacing_ori, zoom_factor)
@@ -398,9 +399,9 @@ def skeleton_analysis(array_aorta, array_stent, spacing, dimension, output_base_
     # 今回の計算結果を辞書で返す
     return {
         "Case_ID": output_name,
-        "Aorta_X_mm": a_x, "Aorta_Y_mm": a_y, "Aorta_Z_mm": a_z,
-        "Stent_X_mm": s_x, "Stent_Y_mm": s_y, "Stent_Z_mm": s_z,
-        "AAA_X_mm": aaa_x, "AAA_Y_mm": aaa_y, "AAA_Z_mm": aaa_z
+        "Stent_Total_X": s_x, "Stent_Total_Y": s_y, "Stent_Total_Z": s_z,
+        "Stent_in_AAA_X": saaa_x, "Stent_in_AAA_Y": saaa_y, "Stent_in_AAA_Z": saaa_z,
+        "AAA_X": aaa_x, "AAA_Y": aaa_y, "AAA_Z": aaa_z
     }
 
 def process_directory(input_dir, output_base_dir):
@@ -426,6 +427,7 @@ def process_directory(input_dir, output_base_dir):
                 aorta_file_path = os.path.join(subdir, filename)
             elif filename.endswith("_prediction.mhd"):
                 prediction_file_pathes.append(os.path.join(subdir, filename))
+                file_name = filename
 
         if original_file_path and stent_file_path and aorta_file_path or len(prediction_file_pathes) > 0:
             try:
@@ -507,8 +509,21 @@ def process_directory(input_dir, output_base_dir):
     
     if all_results:
         summary_df = pd.DataFrame(all_results)
-        csv_output_path = os.path.join(output_base_dir, "all_cases_bbox_summary.csv")
-        summary_df.to_csv(csv_output_path, index=False, encoding='utf-8-sig')
+        bbox_path = os.path.join(output_base_dir, "bbox_data.csv")
+        summary_df.to_csv(bbox_path, index=False, encoding='utf-8-sig')
+
+        part_of_res_path = os.path.join(output_base_dir, "part_of_the_results.csv")
+        df1 = pd.read_csv(bbox_path)
+        df2 = pd.read_csv(part_of_res_path)
+        combined_df = pd.concat([df1, df2], axis=1)
+        csv_file_name = file_name.replace("_prediction.mhd", ".csv")
+        output_name = f"results_{csv_file_name}"
+        csv_output_path = os.path.join(output_base_dir, output_name)
+        combined_df.to_csv(csv_output_path, index=False, encoding='utf-8-sig')
+
+        os.remove(bbox_path)
+        os.remove(part_of_res_path)
+
         print(f"\n[Success] Final summary saved to: {csv_output_path}")
     else:
         print("No results to save.")
