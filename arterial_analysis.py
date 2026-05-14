@@ -55,16 +55,8 @@ def post_processing_for_arterial(arterial_mask, spacing, branch_point, stent_mas
 
     # Calculate maximum diameter and short axis
     max_diameter, max_short_diameter = calculate_diameters(arterial_mask, spacing, aaa_start, aaa_end)
-
-    # Save part of the data
-    data = [[volume, max_diameter, max_short_diameter]]
-    df = pd.DataFrame(data, columns=['AAA_volume', 'max_diameter', 'max_short_diameter'])
-    save_path = '/home/tanaka/data/analysis_res3/part_of_the_results.csv'
-    df.to_csv(save_path, index=False, encoding='utf-8-sig')
-
-    print("~~~~~~~~~~ Save part of the data ~~~~~~~~~~~~~~~")
     
-    return [aaa_start, aaa_end]
+    return [aaa_start, aaa_end, volume, max_diameter, max_short_diameter]
 
 # Bounding box calculation
 def bounding_box_cal(mask, spacing, reference_slice):

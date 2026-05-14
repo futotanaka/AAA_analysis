@@ -365,7 +365,8 @@ def skeleton_analysis(array_aorta, array_stent, spacing, dimension, output_base_
     print("...")
     stent_analysis.postProcessingForStent(post_skeleton_stent, array_stent, spacing, branch_point)
     # Arterial analysis
-    aaa_range = arterial_analysis.post_processing_for_arterial(array_aorta,spacing,branch_point,array_stent,zoom_factor)
+    aaa_res = arterial_analysis.post_processing_for_arterial(array_aorta,spacing,branch_point,array_stent,zoom_factor)
+    aaa_range = [aaa_res[0], aaa_res[1]]
 
     # --- Bounding Box 計算 ---
     def get_bbox_metrics(array, spc, z_limits=None):
@@ -401,7 +402,8 @@ def skeleton_analysis(array_aorta, array_stent, spacing, dimension, output_base_
         "Case_ID": output_name,
         "Stent_Total_X": s_x, "Stent_Total_Y": s_y, "Stent_Total_Z": s_z,
         "Stent_in_AAA_X": saaa_x, "Stent_in_AAA_Y": saaa_y, "Stent_in_AAA_Z": saaa_z,
-        "AAA_X": aaa_x, "AAA_Y": aaa_y, "AAA_Z": aaa_z
+        "AAA_X": aaa_x, "AAA_Y": aaa_y, "AAA_Z": aaa_z,
+        "AAA_volume": aaa_res[2], "Max_diameter": aaa_res[3], "Max_short_diameter": aaa_res[4]
     }
 
 def process_directory(input_dir, output_base_dir):
@@ -509,20 +511,10 @@ def process_directory(input_dir, output_base_dir):
     
     if all_results:
         summary_df = pd.DataFrame(all_results)
-        bbox_path = os.path.join(output_base_dir, "bbox_data.csv")
-        summary_df.to_csv(bbox_path, index=False, encoding='utf-8-sig')
-
-        part_of_res_path = os.path.join(output_base_dir, "part_of_the_results.csv")
-        df1 = pd.read_csv(bbox_path)
-        df2 = pd.read_csv(part_of_res_path)
-        combined_df = pd.concat([df1, df2], axis=1)
         csv_file_name = file_name.replace("_prediction.mhd", ".csv")
-        output_name = f"results_{csv_file_name}"
-        csv_output_path = os.path.join(output_base_dir, output_name)
-        combined_df.to_csv(csv_output_path, index=False, encoding='utf-8-sig')
-
-        os.remove(bbox_path)
-        os.remove(part_of_res_path)
+        output_file_name = f"results_{csv_file_name}"
+        csv_output_path = os.path.join(output_base_dir, output_file_name)
+        summary_df.to_csv(csv_output_path, index=False, encoding='utf-8-sig')
 
         print(f"\n[Success] Final summary saved to: {csv_output_path}")
     else:
